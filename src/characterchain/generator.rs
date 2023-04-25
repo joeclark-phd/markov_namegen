@@ -1,7 +1,7 @@
-use multimarkov::MultiMarkov;
 use regex::Regex;
 use crate::characterchain::builder::CharacterChainGeneratorBuilder;
 use crate::interface::RandomTextGenerator;
+use multimarkov::MultiMarkov;
 
 /// This struct, once trained on a corpus of training data, can be used repeatedly to generate
 /// random text strings (i.e. names) that sort-of resemble the training data.  At its heart is a

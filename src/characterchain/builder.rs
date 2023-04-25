@@ -1,23 +1,22 @@
 use std::ops::Deref;
-use multimarkov::MultiMarkov;
 use crate::characterchain::generator::CharacterChainGenerator;
+use multimarkov::{MultiMarkov};
+use multimarkov::builder::MultiMarkovBuilder;
 
 /// A Builder pattern for CharacterChainGenerator.
 pub struct CharacterChainGeneratorBuilder<'a> {
-    model: MultiMarkov<char>,
+    model: MultiMarkovBuilder<char>,
     pattern: Option<&'a str>,
-    order: i32,
-    prior: f64,
 }
 
 impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// Instantiate a new builder with default values.
     pub fn new() -> Self {
         Self {
-            model: MultiMarkov::<char>::new(),
+            model: MultiMarkov::<char>::builder()
+                .with_order(CharacterChainGenerator::DEFAULT_ORDER)
+                .with_prior(CharacterChainGenerator::DEFAULT_PRIOR),
             pattern: None,
-            order: CharacterChainGenerator::DEFAULT_ORDER,
-            prior: CharacterChainGenerator::DEFAULT_PRIOR,
         }
     }
     /// Sets a custom regex pattern for pattern matching (filtering) of output.
@@ -35,19 +34,19 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// and less random, and will be slower and require more memory.
     pub fn with_order(mut self, order: i32) -> Self {
         assert!(order > 0,"Order must be an integer greater than zero.");
-        self.order = order;
+        self.model = self.model.with_order(order); // update model now, so it'll affect training
         self
     }
     /// Sets a custom value for prior probabilities.  Values from 0.001 to 0.01 are recommended.
     /// The greater the prior, the more likely you'll see character combinations that do NOT occur in the training data.
     /// By default, they are set to CharacterChainGenerator::DEFAULT_PRIOR.
     pub fn with_prior(mut self, prior: f64) -> Self {
-        self.prior = prior;
+        self.model = self.model.with_prior(prior);
         self
     }
-    /// Set the priors to 0.0.
+    /// Set the priors to None.
     pub fn without_prior(mut self) -> Self {
-        self.prior = 0.0;
+        self.model = self.model.without_prior();
         self
     }
     /// Ingest a training data set to train the model.
@@ -64,7 +63,7 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// Build the CharacterChainGenerator (consuming the "Builder" in the process).
     pub fn build(self) -> CharacterChainGenerator<'a> {
         CharacterChainGenerator {
-            model: self.model.with_order(self.order).with_priors(self.prior).build(),
+            model: self.model.build(),
             pattern: self.pattern,
         }
     }
