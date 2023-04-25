@@ -10,8 +10,9 @@ use multimarkov::MultiMarkov;
 ///
 /// Create an instance using the builder pattern:
 /// ```
+/// use markov_namegen::characterchain::generator::CharacterChainGenerator;
 /// let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
-/// let namegen = CharacterChainGenerator::builder().train(names).build();
+/// let namegen = CharacterChainGenerator::builder().train(dwarf_names).build();
 /// ```
 ///
 /// Training data can be an iterator of `String` or of `&str` type, and you can call `.train()`
@@ -20,6 +21,7 @@ use multimarkov::MultiMarkov;
 /// Here's an example with all the optional settings:
 ///
 /// ```
+/// use markov_namegen::characterchain::generator::CharacterChainGenerator;
 /// let pokedex_names = vec!["bulbasaur","charmander","squirtle","pikachu"].into_iter();
 /// let namegen = CharacterChainGenerator::builder()
 ///     .with_order(2)

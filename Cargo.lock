@@ -36,7 +36,7 @@ checksum = "6a987beff54b60ffa6d51982e1aa1146bc42f19bd26be28b0586f252fccf5317"
 
 [[package]]
 name = "markov_namegen"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "multimarkov",
  "regex",
