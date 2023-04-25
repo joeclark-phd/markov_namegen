@@ -39,7 +39,7 @@ Quick start:
         .train(dwarf_names)
         .build();
 
-    println!(generator.generateOne());
+    println!(generator.generate_one());
 
 (or using a file as input, and demonstrating all the builder options...)
 
@@ -57,7 +57,7 @@ Quick start:
         .train(lines)
         .build();
 
-    println!(generator.generateOne());
+    println!(generator.generate_one());
 
 The big idea of Markov-chain random text generation is that you collect statistics on which characters follow other characters.  So if a particular language uses "th" a lot, "t" should often be followed by "h" in the randomly-generated text.  This crate's approach takes in an iterator of training data and uses it to build up a Markov model, which can be used to generate new strings. However, the Markov-chain approach has a number of caveats:
 
