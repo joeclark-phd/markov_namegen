@@ -19,10 +19,9 @@ Usage TBD...
 
 ### RandomTextGenerator
 
-One trait, RandomTextGenerator, is provided, with two methods:
+One trait, RandomTextGenerator, is provided, with one method:
 
-- `generateOne() -> String` yields a new, procedurally-generated text string
-- `generateOne(&str pattern)` yields a new string that matches the regex pattern
+- `generate_one() -> String` yields a new, procedurally-generated text string.
 
 There are three structs that implement the trait:
 
