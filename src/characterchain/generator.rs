@@ -34,6 +34,7 @@ use crate::interface::RandomTextGenerator;
 /// until it finds one that matches.  Be careful: if you supply a difficult-to-match pattern,
 /// name generation may be very slow; if you supply and impossible-to-match pattern, for example
 /// one that requires characters not seen in the training data, you will get an infinite loop.
+///
 pub struct CharacterChainGenerator<'a> {
     pub(super) model: MultiMarkov<char>,
     pub(super) pattern: Option<&'a str>,
