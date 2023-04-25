@@ -54,7 +54,11 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// The argument 'sequences' is an iterator of either `String` or `&str` values, the words or names
     /// that we want our randomly generated text to resemble.
     pub fn train(mut self, sequences: impl Iterator<Item=impl Deref<Target = str>>) -> Self {
-        self.model = self.model.train( sequences.map(|s| s.to_lowercase().chars().collect()) );
+        self.model = self.model.train( sequences
+            .map(|s| s.to_lowercase()) // lowercase the input
+            .map(|mut s| { s.insert(0, '#'); s.push('#'); s }) // add the beginning-of-character and end-of-character strings
+            .map(|s| s.chars().collect()) // turn the input stream into an iterator of Vec<char>
+        );
         self
     }
     /// Build the CharacterChainGenerator (consuming the "Builder" in the process).

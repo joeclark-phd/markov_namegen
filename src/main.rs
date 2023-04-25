@@ -10,7 +10,7 @@ fn main() {
 
     let file = File::open("resources/romans.txt").unwrap();
     let reader = BufReader::new(file);
-    let lines = reader.lines().map(|l| l.unwrap() ).map(|mut v| { v.insert(0, '#'); v.push('#'); v });
+    let lines = reader.lines().map(|l| l.unwrap() );
 
     let namegen = CharacterChainGenerator::builder()
         .with_order(3)
