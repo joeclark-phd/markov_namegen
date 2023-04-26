@@ -34,8 +34,30 @@ use multimarkov::MultiMarkov;
 /// You can set a pattern to filter acceptable names; for example above we are requiring that
 /// results must be 4 to 8 characters long.  CharacterChainGenerator will simply re-roll new names
 /// until it finds one that matches.  Be careful: if you supply a difficult-to-match pattern,
-/// name generation may be very slow; if you supply and impossible-to-match pattern, for example
+/// name generation may be very slow; if you supply an impossible-to-match pattern, for example
 /// one that requires characters not seen in the training data, you will get an infinite loop.
+///
+/// Here's a final example that reads names from a file (one name per line), builds up a
+/// CharacterChainGenerator, and then spits out a few names:
+///
+/// ```
+/// use std::fs::File;
+/// use std::io::{BufReader, BufRead};
+/// use markov_namegen::characterchain::generator::CharacterChainGenerator;
+/// use markov_namegen::interface::RandomTextGenerator;
+///
+/// let file = File::open("resources/romans.txt").unwrap();
+/// let reader = BufReader::new(file);
+/// let lines = reader.lines().map(|l| l.unwrap() );
+///
+/// let namegen = CharacterChainGenerator::builder()
+///     .train(lines)
+///     .build();
+///
+/// for _i in 0..10 {
+///     println!("{}", namegen.generate_one());
+/// }
+/// ```
 ///
 pub struct CharacterChainGenerator<'a> {
     pub(super) model: MultiMarkov<char>,
