@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::ops::Deref;
 use multimarkov::builder::MultiMarkovBuilder;
 use multimarkov::MultiMarkov;
