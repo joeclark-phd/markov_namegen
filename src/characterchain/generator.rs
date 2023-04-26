@@ -10,7 +10,7 @@ use multimarkov::MultiMarkov;
 ///
 /// Create an instance using the builder pattern:
 /// ```
-/// use markov_namegen::characterchain::generator::CharacterChainGenerator;
+/// use markov_namegen::CharacterChainGenerator;
 /// let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
 /// let namegen = CharacterChainGenerator::builder().train(dwarf_names).build();
 /// ```
@@ -21,7 +21,7 @@ use multimarkov::MultiMarkov;
 /// Here's an example with all the optional settings:
 ///
 /// ```
-/// use markov_namegen::characterchain::generator::CharacterChainGenerator;
+/// use markov_namegen::CharacterChainGenerator;
 /// let pokedex_names = vec!["bulbasaur","charmander","squirtle","pikachu"].into_iter();
 /// let namegen = CharacterChainGenerator::builder()
 ///     .with_order(2)
@@ -43,8 +43,8 @@ use multimarkov::MultiMarkov;
 /// ```
 /// use std::fs::File;
 /// use std::io::{BufReader, BufRead};
-/// use markov_namegen::characterchain::generator::CharacterChainGenerator;
-/// use markov_namegen::interface::RandomTextGenerator;
+/// use markov_namegen::CharacterChainGenerator;
+/// use markov_namegen::RandomTextGenerator;
 ///
 /// let file = File::open("resources/romans.txt").unwrap();
 /// let reader = BufReader::new(file);

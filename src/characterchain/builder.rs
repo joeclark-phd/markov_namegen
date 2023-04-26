@@ -72,7 +72,7 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::characterchain::generator::CharacterChainGenerator;
+    use crate::CharacterChainGenerator;
 
     #[test]
     fn test_builder_pattern_works() {
