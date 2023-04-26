@@ -76,7 +76,7 @@ pub struct ClusterChainGenerator<'a> {
 
 impl<'a> ClusterChainGenerator<'a> {
     pub const DEFAULT_ORDER: i32 = 3;
-    pub const DEFAULT_PRIOR: f64 = 0.005;
+    pub const DEFAULT_PRIOR: f64 = 0.001;
 
     pub fn builder() -> ClusterChainGeneratorBuilder<'a> {
         ClusterChainGeneratorBuilder::new()

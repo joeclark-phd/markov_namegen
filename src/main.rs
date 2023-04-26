@@ -36,7 +36,7 @@ fn main() {
 
     let namegen2 = CharacterChainGenerator::builder()
         .with_order(3)
-        .with_prior(0.007)
+        .with_prior(0.0005)
 //        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
         .train(lines2)

@@ -39,9 +39,19 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
         self.model = self.model.with_order(order); // update model now, so it'll affect training
         self
     }
-    /// Sets a custom value for prior probabilities.  Values from 0.001 to 0.01 are recommended.
-    /// The greater the prior, the more likely you'll see character combinations that do NOT occur in the training data.
-    /// By default, they are set to CharacterChainGenerator::DEFAULT_PRIOR.
+    /// Sets a custom value for prior probabilities. The greater the prior, the more likely you'll
+    /// see character combinations that do NOT occur in the training data.
+    ///
+    /// The way this works is, each observed transition gets a score/weight of 1.0 every time it's
+    /// observed.  These are never normalized or turned into percentages, so if your training set
+    /// is larger, typical weights will be larger. A prior of 0.1 will make an unobserved transition
+    /// occur as frequently as if it had been seen 1/10 as often as a transition observed once in
+    /// the training data.  That may not seem like much, but depending on the size of your alphabet
+    /// there might be *a lot* of these, adding up to quite a lot of weird, unexpected transitions.
+    /// Small values, such as 0.001 to 0.01, are recommended.  Tweak until you get the right amount
+    /// of randomness for your application.
+    ///
+    /// By default, they are set to `CharacterChainGenerator::DEFAULT_PRIOR`.
     pub fn with_prior(mut self, prior: f64) -> Self {
         self.model = self.model.with_prior(prior);
         self

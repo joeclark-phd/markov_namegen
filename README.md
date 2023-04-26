@@ -121,6 +121,8 @@ anneth
 
 ## Release Notes
 
+0.2.1: Decreased default "prior" for ClusterChainGenerator.  A given training set will have way more clusters than letters in the alphabet, so the outcomes were way too random.
+
 0.2.0: Added ClusterChainGenerator
 
 0.1.3: CharacterChainGenerator working as intended
