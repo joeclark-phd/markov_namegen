@@ -33,6 +33,8 @@ There are three structs that implement the trait:
 
 Quick start:
 
+    use markov_namegen::CharacterChainGenerator;
+
     let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
 
     let generator = CharacterChainGenerator::builder()
@@ -45,6 +47,8 @@ Quick start:
 
     use std::fs::File;
     use std::io::{BufReader, BufRead};
+    use markov_namegen::CharacterChainGenerator;
+    use markov_namegen::RandomTextGenerator;
 
     let file = File::open("resources/romans.txt").unwrap();
     let reader = BufReader::new(file);
