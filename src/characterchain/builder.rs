@@ -32,6 +32,8 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// Must be an integer greater than zero.  Values from 1 to 3 are recommended.
     /// Higher-order models will make procedurally generated text more like the training data,
     /// and less random, and will be slower and require more memory.
+    ///
+    /// NOTE: Order should be set *before* training the model with `.train()`
     pub fn with_order(mut self, order: i32) -> Self {
         assert!(order > 0,"Order must be an integer greater than zero.");
         self.model = self.model.with_order(order); // update model now, so it'll affect training

@@ -1,6 +1,6 @@
 [package]
 name = "markov_namegen"
-version = "0.1.3"
+version = "0.2.0"
 edition = "2021"
 authors = ["joeclark-phd <joe@joeclark.net>"]
 license = "MIT"
@@ -14,3 +14,4 @@ Random text generators based on Markov models.
 [dependencies]
 multimarkov = "0.3.2"
 regex = "1.8.1"
+is-vowel = "0.1.0"

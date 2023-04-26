@@ -26,7 +26,7 @@ One trait, RandomTextGenerator, is provided, with one method:
 There are three structs that implement the trait:
 
 - CharacterChainGenerator
-- CharacterChainCasePreservingGenerator
+- CharacterChainCasePreservingGenerator (coming soon)
 - ClusterChainGenerator
 
 ### CharacterChainGenerator
@@ -85,7 +85,18 @@ A variant of CharacterChainGenerator that learns and reproduces upper/lower case
 
 ### ClusterChainGenerator
 
-(coming in a future version)
+Quick start:
+
+    use markov_namegen::ClusterChainGenerator;
+    let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
+    let namegen = ClusterChainGenerator::builder()
+        .with_order(2)
+        .without_prior()
+        .with_pattern("^[A-Za-z]{4,8}$")
+        .train(dwarf_names)
+        .build();
+    println!(generator.generate_one());
+
 
 A class that uses a vowel/consonant clustering algorithm to generate new random text.  Based loosely on [an algorithm described by Kusigrosz at RogueBasin](http://www.roguebasin.com/index.php/Cluster_chaining_name_generator), it scans input text for clusters of vowels and clusters of consonants, after converting it all to lowercase, keeping track of all clusters that have been observed to follow any given cluster.  For example, "Elizabeth" would yield clusters `#-e-l-i-z-a-b-e-th-#` and "Anne" would yield `#-a-nn-e-#` where "`#`" is a control character marking the start or end of a string.
 
@@ -107,3 +118,9 @@ abelizanne
 anneth
 ...etc...
 ```
+
+## Release Notes
+
+0.2.0: Added ClusterChainGenerator
+
+0.1.3: CharacterChainGenerator working as intended
