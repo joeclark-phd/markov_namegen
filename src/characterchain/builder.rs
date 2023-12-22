@@ -1,7 +1,8 @@
 use std::ops::Deref;
 use crate::characterchain::generator::CharacterChainGenerator;
-use multimarkov::{MultiMarkov};
+use multimarkov::MultiMarkov;
 use multimarkov::builder::MultiMarkovBuilder;
+use rand::RngCore;
 
 /// A Builder pattern for CharacterChainGenerator.
 pub struct CharacterChainGeneratorBuilder<'a> {
@@ -59,6 +60,11 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// Set the priors to None.
     pub fn without_prior(mut self) -> Self {
         self.model = self.model.without_prior();
+        self
+    }
+    /// Sets a custom Random Number Generator (RNG) for the model.
+    pub fn with_rng(mut self, rng: Box<dyn RngCore>) -> Self {
+        self.model = self.model.with_rng(rng);
         self
     }
     /// Ingest a training data set to train the model.

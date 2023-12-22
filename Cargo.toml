@@ -15,3 +15,4 @@ Random text generators based on Markov models.
 multimarkov = "0.4.0"
 regex = "1.8.1"
 is-vowel = "0.1.0"
+rand = { version="0.8.5", features = ["small_rng"]}
