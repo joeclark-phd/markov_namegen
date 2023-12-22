@@ -128,7 +128,6 @@ mod tests {
     use is_vowel::IsRomanceVowel;
     use crate::clusterchain::builder::ClusterChainGeneratorBuilder;
     use crate::clusterchain::generator::ClusterChainGenerator;
-    use crate::RandomTextGenerator;
 
     #[test]
     fn test_is_vowel_crate_works() {

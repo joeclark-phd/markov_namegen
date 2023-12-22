@@ -49,6 +49,7 @@ Quick start:
     use std::io::{BufReader, BufRead};
     use markov_namegen::CharacterChainGenerator;
     use markov_namegen::RandomTextGenerator;
+    use rand::{rngs::SmallRng, SeedableRng};
 
     let file = File::open("resources/romans.txt").unwrap();
     let reader = BufReader::new(file);
@@ -58,6 +59,7 @@ Quick start:
         .with_order(2)
         .with_prior(0.007)
         .with_pattern("^[A-Za-z]{4,8}$")
+        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines)
         .build();
 
@@ -88,11 +90,15 @@ A variant of CharacterChainGenerator that learns and reproduces upper/lower case
 Quick start:
 
     use markov_namegen::ClusterChainGenerator;
+    use rand::{rngs::SmallRng, SeedableRng};
+
     let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
+    
     let namegen = ClusterChainGenerator::builder()
         .with_order(2)
         .without_prior()
         .with_pattern("^[A-Za-z]{4,8}$")
+        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(dwarf_names)
         .build();
     println!(generator.generate_one());

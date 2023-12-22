@@ -22,11 +22,13 @@ use multimarkov::MultiMarkov;
 ///
 /// ```
 /// use markov_namegen::CharacterChainGenerator;
+/// use rand::{rngs::SmallRng, SeedableRng};
 /// let pokedex_names = vec!["bulbasaur","charmander","squirtle","pikachu"].into_iter();
 /// let namegen = CharacterChainGenerator::builder()
 ///     .with_order(2)
 ///     .with_prior(0.007)
 ///     .with_pattern("^[A-Za-z]{4,8}$")
+///     .with_rng(Box::new(SmallRng::seed_from_u64(123)))
 ///     .train(pokedex_names)
 ///     .build();
 /// ```

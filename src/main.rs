@@ -3,6 +3,9 @@ mod interface;
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
+use rand::SeedableRng;
+use rand::rngs::SmallRng;
+
 use crate::characterchain::generator::CharacterChainGenerator;
 use crate::interface::RandomTextGenerator;
 
@@ -20,6 +23,7 @@ fn main() {
         .with_prior(0.007)
 //        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
+        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines)
         .build();
 
@@ -39,6 +43,7 @@ fn main() {
         .with_prior(0.0005)
 //        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
+        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines2)
         .build();
 
