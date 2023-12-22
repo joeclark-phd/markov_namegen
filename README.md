@@ -93,7 +93,7 @@ Quick start:
     use rand::{rngs::SmallRng, SeedableRng};
 
     let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
-    
+
     let namegen = ClusterChainGenerator::builder()
         .with_order(2)
         .without_prior()
@@ -126,6 +126,8 @@ anneth
 ```
 
 ## Release Notes
+
+0.3.1: Added the ability to initialize each type of generator with a custom RNG.
 
 0.2.1: Decreased default "prior" for ClusterChainGenerator.  A given training set will have way more clusters than letters in the alphabet, so the outcomes were way too random.
 
