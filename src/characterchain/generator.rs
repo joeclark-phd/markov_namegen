@@ -50,7 +50,7 @@ use multimarkov::MultiMarkov;
 /// let reader = BufReader::new(file);
 /// let lines = reader.lines().map(|l| l.unwrap() );
 ///
-/// let namegen = CharacterChainGenerator::builder()
+/// let mut namegen = CharacterChainGenerator::builder()
 ///     .train(lines)
 ///     .build();
 ///
@@ -72,7 +72,7 @@ impl<'a> CharacterChainGenerator<'a> {
         CharacterChainGeneratorBuilder::new()
     }
 
-    fn generate_string(&self) -> String {
+    fn generate_string(&mut self) -> String {
         // start with the beginning-of-word character
         let mut name = vec!['#'];
         name.push(self.model.random_next(&name).unwrap());
@@ -89,7 +89,7 @@ impl<'a> CharacterChainGenerator<'a> {
 }
 
 impl RandomTextGenerator for CharacterChainGenerator<'_> {
-    fn generate_one(&self) -> String {
+    fn generate_one(&mut self) -> String {
         match self.pattern {
             None => self.generate_string(),
             Some(pattern) => {

@@ -1,4 +1,4 @@
 
 pub trait RandomTextGenerator {
-    fn generate_one(&self) -> String;
+    fn generate_one(&mut self) -> String;
 }

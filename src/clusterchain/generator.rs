@@ -33,7 +33,7 @@ use crate::RandomTextGenerator;
 /// ```
 /// use markov_namegen::ClusterChainGenerator;
 /// let pokedex_names = vec!["bulbasaur","charmander","squirtle","pikachu"].into_iter();
-/// let namegen = ClusterChainGenerator::builder()
+/// let mut namegen = ClusterChainGenerator::builder()
 ///     .with_order(2)
 ///     .with_prior(0.007)
 ///     .with_pattern("^[A-Za-z]{4,8}$")
@@ -60,7 +60,7 @@ use crate::RandomTextGenerator;
 /// let reader = BufReader::new(file);
 /// let lines = reader.lines().map(|l| l.unwrap() );
 ///
-/// let namegen = ClusterChainGenerator::builder()
+/// let mut namegen = ClusterChainGenerator::builder()
 ///     .train(lines)
 ///     .build();
 ///
@@ -82,7 +82,7 @@ impl<'a> ClusterChainGenerator<'a> {
         ClusterChainGeneratorBuilder::new()
     }
 
-    fn generate_string(&self) -> String {
+    fn generate_string(&mut self) -> String {
         // start with the beginning-of-word character
         let mut name = vec!["#".to_string()];
         name.push(self.model.random_next(&name).unwrap());
@@ -99,7 +99,7 @@ impl<'a> ClusterChainGenerator<'a> {
 }
 
 impl RandomTextGenerator for ClusterChainGenerator<'_> {
-    fn generate_one(&self) -> String {
+    fn generate_one(&mut self) -> String {
         match self.pattern {
             None => self.generate_string(),
             Some(pattern) => {

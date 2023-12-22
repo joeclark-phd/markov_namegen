@@ -15,7 +15,7 @@ fn main() {
     let reader = BufReader::new(file);
     let lines = reader.lines().map(|l| l.unwrap() );
 
-    let namegen = CharacterChainGenerator::builder()
+    let mut namegen = CharacterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.007)
 //        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
@@ -34,7 +34,7 @@ fn main() {
     let reader2 = BufReader::new(file2);
     let lines2 = reader2.lines().map(|l| l.unwrap() );
 
-    let namegen2 = CharacterChainGenerator::builder()
+    let mut namegen2 = CharacterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.0005)
 //        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
