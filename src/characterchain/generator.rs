@@ -77,10 +77,12 @@ impl<'a> CharacterChainGenerator {
     fn generate_string(&mut self) -> String {
         // start with the beginning-of-word character
         let mut name = vec!['#'];
-        name.push(self.model.random_next(&name).unwrap());
-        while !name.ends_with(&['#']) {
+        loop {
             // keep adding letters until we reach the end-of-word character
             name.push(self.model.random_next(&name).unwrap());
+            if name.ends_with(&['#']) {
+                break
+            }
         }
         // remove the trailing and leading "#" signs
         name.pop();
