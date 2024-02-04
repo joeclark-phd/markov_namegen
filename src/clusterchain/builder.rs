@@ -90,25 +90,26 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
     fn clusterize(sequence: String) -> Vec<String> {
         let mut cluster_chain: Vec<String> = Vec::new();
         let mut chars = sequence.chars();
-        let first_character = chars.nth(0).unwrap();
-        // start the first cluster with the first character
-        let mut current_cluster = String::from(first_character);
-        // flag the type of the first cluster (vowel or consonant)
-        let mut is_vowel_cluster = first_character.is_romance_vowel();
-        // now loop through the other characters and build up the vec of clusters
-        for c in chars {
-            if c.is_romance_vowel() == is_vowel_cluster {
-                // in other words, if the next char is of the same typ (vowel/consonant) as the last one(s), add it to the current cluster
-                current_cluster.push(c);
-            } else {
-                // otherwise, add the current cluster to the vec and begin a new cluster with this character
-                cluster_chain.push(current_cluster);
-                current_cluster = String::from(c);
-                is_vowel_cluster = !is_vowel_cluster;
+        if let Some(first_character) = chars.nth(0) {
+            // start the first cluster with the first character
+            let mut current_cluster = String::from(first_character);
+            // flag the type of the first cluster (vowel or consonant)
+            let mut is_vowel_cluster = first_character.is_romance_vowel();
+            // now loop through the other characters and build up the vec of clusters
+            for c in chars {
+                if c.is_romance_vowel() == is_vowel_cluster {
+                    // in other words, if the next char is of the same typ (vowel/consonant) as the last one(s), add it to the current cluster
+                    current_cluster.push(c);
+                } else {
+                    // otherwise, add the current cluster to the vec and begin a new cluster with this character
+                    cluster_chain.push(current_cluster);
+                    current_cluster = String::from(c);
+                    is_vowel_cluster = !is_vowel_cluster;
+                }
             }
+            // finalize the final cluster by adding it to the list
+            cluster_chain.push(current_cluster);
         }
-        // finalize the final cluster by adding it to the list
-        cluster_chain.push(current_cluster);
         cluster_chain
     }
 
