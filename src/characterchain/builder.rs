@@ -1,8 +1,8 @@
-use std::ops::Deref;
 use crate::characterchain::generator::CharacterChainGenerator;
-use multimarkov::MultiMarkov;
 use multimarkov::builder::MultiMarkovBuilder;
+use multimarkov::MultiMarkov;
 use rand::RngCore;
+use std::ops::Deref;
 
 /// A Builder pattern for CharacterChainGenerator.
 pub struct CharacterChainGeneratorBuilder<'a> {
@@ -36,7 +36,7 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     ///
     /// NOTE: Order should be set *before* training the model with `.train()`
     pub fn with_order(mut self, order: i32) -> Self {
-        assert!(order > 0,"Order must be an integer greater than zero.");
+        assert!(order > 0, "Order must be an integer greater than zero.");
         self.model = self.model.with_order(order); // update model now, so it'll affect training
         self
     }
@@ -70,11 +70,16 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
     /// Ingest a training data set to train the model.
     /// The argument 'sequences' is an iterator of either `String` or `&str` values, the words or names
     /// that we want our randomly generated text to resemble.
-    pub fn train(mut self, sequences: impl Iterator<Item=impl Deref<Target = str>>) -> Self {
-        self.model = self.model.train( sequences
-            .map(|s| s.to_lowercase()) // lowercase the input
-            .map(|mut s| { s.insert(0, '#'); s.push('#'); s }) // add the beginning-of-character and end-of-character strings
-            .map(|s| s.chars().collect()) // turn the input stream into an iterator of Vec<char>
+    pub fn train(mut self, sequences: impl Iterator<Item = impl Deref<Target = str>>) -> Self {
+        self.model = self.model.train(
+            sequences
+                .map(|s| s.to_lowercase()) // lowercase the input
+                .map(|mut s| {
+                    s.insert(0, '#');
+                    s.push('#');
+                    s
+                }) // add the beginning-of-character and end-of-character strings
+                .map(|s| s.chars().collect()), // turn the input stream into an iterator of Vec<char>
         );
         self
     }
@@ -85,7 +90,6 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
             pattern: self.pattern,
         }
     }
-
 }
 
 #[cfg(test)]
@@ -94,11 +98,15 @@ mod tests {
 
     #[test]
     fn test_builder_pattern_works() {
-        let generator = CharacterChainGenerator::builder().with_order(2).with_prior(0.007).with_pattern("foo").build();
+        let generator = CharacterChainGenerator::builder()
+            .with_order(2)
+            .with_prior(0.007)
+            .with_pattern("foo")
+            .build();
     }
 
     #[test]
-    #[should_panic(expected="Order must be an integer greater than zero.")]
+    #[should_panic(expected = "Order must be an integer greater than zero.")]
     fn test_order_cannot_be_less_than_one() {
         let generator = CharacterChainGenerator::builder().with_order(0).build();
     }
@@ -106,10 +114,11 @@ mod tests {
     #[test]
     fn test_can_train_model_with_vec_of_strings() {
         // Training works equally well with an iterator of Strings or an iterator of &strs.
-        let inputs = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
+        let inputs = vec![
+            "dopey", "sneezy", "bashful", "sleepy", "happy", "grumpy", "doc",
+        ]
+        .into_iter();
         //let inputs_as_strings = vec![String::from("dopey"),String::from("sneezy"),String::from("bashful"),String::from("sleepy"),String::from("happy"),String::from("grumpy"),String::from("doc")].into_iter();
         let generator = CharacterChainGenerator::builder().train(inputs).build();
     }
-
-
 }

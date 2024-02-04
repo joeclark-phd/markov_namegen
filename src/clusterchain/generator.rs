@@ -1,14 +1,14 @@
-use multimarkov::MultiMarkov;
-use regex::Regex;
 use crate::clusterchain::builder::ClusterChainGeneratorBuilder;
 use crate::RandomTextGenerator;
+use multimarkov::MultiMarkov;
+use regex::Regex;
 
 /// This struct, once trained on a corpus of training data, can be used repeatedly to generate
 /// random text strings (i.e. names) that sort-of resemble the training data.  At its heart is a
 /// Markov chain model.  The key difference between this struct and its cousin `CharacterChainGenerator`
 /// is that this one learns vowel and consonant *clusters* and the relative probabilities with which
 /// one cluster follows another.  
-/// 
+///
 /// So, from a string like `"fascinating"` it learns the following transitions:
 ///
 /// - `"f"` or `"n"` -> `"a"`
