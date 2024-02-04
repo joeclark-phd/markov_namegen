@@ -98,7 +98,7 @@ mod tests {
 
     #[test]
     fn test_builder_pattern_works() {
-        let generator = CharacterChainGenerator::builder()
+        let _generator = CharacterChainGenerator::builder()
             .with_order(2)
             .with_prior(0.007)
             .with_pattern("foo")
@@ -108,7 +108,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "Order must be an integer greater than zero.")]
     fn test_order_cannot_be_less_than_one() {
-        let generator = CharacterChainGenerator::builder().with_order(0).build();
+        let _generator = CharacterChainGenerator::builder().with_order(0).build();
     }
 
     #[test]
@@ -119,6 +119,6 @@ mod tests {
         ]
         .into_iter();
         //let inputs_as_strings = vec![String::from("dopey"),String::from("sneezy"),String::from("bashful"),String::from("sleepy"),String::from("happy"),String::from("grumpy"),String::from("doc")].into_iter();
-        let generator = CharacterChainGenerator::builder().train(inputs).build();
+        let _generator = CharacterChainGenerator::builder().train(inputs).build();
     }
 }

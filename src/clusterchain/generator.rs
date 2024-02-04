@@ -90,15 +90,14 @@ impl<'a> ClusterChainGenerator<'a> {
         // start with the beginning-of-word character
         let mut name = vec!["#".to_string()];
         name.push(self.model.random_next(&name).unwrap());
-        while !name.ends_with(&*vec!["#".to_string()]) {
+        while !name.ends_with(&["#".to_string()]) {
             // keep adding letters until we reach the end-of-word character
             name.push(self.model.random_next(&name).unwrap());
         }
         // remove the trailing and leading "#" signs
         name.pop();
         name.remove(0);
-        let stringname = name.join("");
-        stringname
+        name.join("")
     }
 }
 
@@ -109,7 +108,7 @@ impl RandomTextGenerator for ClusterChainGenerator<'_> {
             Some(pattern) => {
                 let re = Regex::new(pattern).unwrap();
                 let mut candidate = self.generate_string();
-                while !re.is_match(&*candidate) {
+                while !re.is_match(&candidate) {
                     //println!("got '{}', re-rolling!", candidate);
                     candidate = self.generate_string();
                 }

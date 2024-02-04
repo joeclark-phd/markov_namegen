@@ -77,7 +77,7 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
         self.model = self.model.train(
             sequences
                 .map(|s| s.to_lowercase()) // lowercase the input
-                .map(|s| ClusterChainGeneratorBuilder::clusterize(s))
+                .map(ClusterChainGeneratorBuilder::clusterize)
                 .map(|mut s| {
                     s.insert(0, "#".to_string());
                     s.push("#".to_string());
@@ -165,7 +165,7 @@ mod tests {
 
     #[test]
     fn test_builder_pattern_works() {
-        let generator = ClusterChainGenerator::builder()
+        let _generator = ClusterChainGenerator::builder()
             .with_order(2)
             .with_prior(0.007)
             .with_pattern("foo")
@@ -175,7 +175,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "Order must be an integer greater than zero.")]
     fn test_order_cannot_be_less_than_one() {
-        let generator = ClusterChainGenerator::builder().with_order(0).build();
+        let _generator = ClusterChainGenerator::builder().with_order(0).build();
     }
 
     #[test]
@@ -185,6 +185,6 @@ mod tests {
             "dopey", "sneezy", "bashful", "sleepy", "happy", "grumpy", "doc",
         ]
         .into_iter();
-        let generator = ClusterChainGenerator::builder().train(inputs).build();
+        let _generator = ClusterChainGenerator::builder().train(inputs).build();
     }
 }
