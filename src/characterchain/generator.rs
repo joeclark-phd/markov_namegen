@@ -61,12 +61,12 @@ use regex::Regex;
 /// }
 /// ```
 ///
-pub struct CharacterChainGenerator<'a> {
+pub struct CharacterChainGenerator {
     pub(super) model: MultiMarkov<char>,
-    pub(super) pattern: Option<&'a str>,
+    pub(super) pattern: Option<Regex>,
 }
 
-impl<'a> CharacterChainGenerator<'a> {
+impl<'a> CharacterChainGenerator {
     pub const DEFAULT_ORDER: i32 = 3;
     pub const DEFAULT_PRIOR: f64 = 0.005;
 
@@ -89,12 +89,11 @@ impl<'a> CharacterChainGenerator<'a> {
     }
 }
 
-impl RandomTextGenerator for CharacterChainGenerator<'_> {
+impl RandomTextGenerator for CharacterChainGenerator {
     fn generate_one(&mut self) -> String {
-        match self.pattern {
+        match self.pattern.clone() {
             None => self.generate_string(),
-            Some(pattern) => {
-                let re = Regex::new(pattern).unwrap();
+            Some(re) => {
                 let mut candidate = self.generate_string();
                 while !re.is_match(&candidate) {
                     //println!("got '{}', re-rolling!", candidate);

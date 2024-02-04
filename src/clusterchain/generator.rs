@@ -73,12 +73,12 @@ use regex::Regex;
 /// }
 /// ```
 ///
-pub struct ClusterChainGenerator<'a> {
+pub struct ClusterChainGenerator {
     pub(super) model: MultiMarkov<String>,
-    pub(super) pattern: Option<&'a str>,
+    pub(super) pattern: Option<Regex>,
 }
 
-impl<'a> ClusterChainGenerator<'a> {
+impl<'a> ClusterChainGenerator {
     pub const DEFAULT_ORDER: i32 = 3;
     pub const DEFAULT_PRIOR: f64 = 0.001;
 
@@ -101,12 +101,11 @@ impl<'a> ClusterChainGenerator<'a> {
     }
 }
 
-impl RandomTextGenerator for ClusterChainGenerator<'_> {
+impl RandomTextGenerator for ClusterChainGenerator {
     fn generate_one(&mut self) -> String {
-        match self.pattern {
+        match self.pattern.clone() {
             None => self.generate_string(),
-            Some(pattern) => {
-                let re = Regex::new(pattern).unwrap();
+            Some(re) => {
                 let mut candidate = self.generate_string();
                 while !re.is_match(&candidate) {
                     //println!("got '{}', re-rolling!", candidate);

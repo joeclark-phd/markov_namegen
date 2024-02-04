@@ -2,6 +2,7 @@ use crate::characterchain::generator::CharacterChainGenerator;
 use multimarkov::builder::MultiMarkovBuilder;
 use multimarkov::MultiMarkov;
 use rand::RngCore;
+use regex::Regex;
 use std::ops::Deref;
 
 /// A Builder pattern for CharacterChainGenerator.
@@ -84,10 +85,11 @@ impl<'a> CharacterChainGeneratorBuilder<'a> {
         self
     }
     /// Build the CharacterChainGenerator (consuming the "Builder" in the process).
-    pub fn build(self) -> CharacterChainGenerator<'a> {
+    pub fn build(self) -> CharacterChainGenerator {
+        let pattern = self.pattern.map(|pat| Regex::new(pat).unwrap());
         CharacterChainGenerator {
             model: self.model.build(),
-            pattern: self.pattern,
+            pattern,
         }
     }
 }
