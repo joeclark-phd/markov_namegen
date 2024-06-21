@@ -127,6 +127,8 @@ anneth
 
 ## Release Notes
 
+0.3.2: Moving the call to `Regex::new` should speed up the call to `generate_one()`. Thanks [ratmice](https://github.com/ratmice).
+
 0.3.1: Added the ability to initialize each type of generator with a custom RNG.
 
 0.2.1: Decreased default "prior" for ClusterChainGenerator.  A given training set will have way more clusters than letters in the alphabet, so the outcomes were way too random.
