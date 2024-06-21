@@ -1,14 +1,14 @@
-use multimarkov::MultiMarkov;
-use regex::Regex;
 use crate::clusterchain::builder::ClusterChainGeneratorBuilder;
 use crate::RandomTextGenerator;
+use multimarkov::MultiMarkov;
+use regex::Regex;
 
 /// This struct, once trained on a corpus of training data, can be used repeatedly to generate
 /// random text strings (i.e. names) that sort-of resemble the training data.  At its heart is a
 /// Markov chain model.  The key difference between this struct and its cousin `CharacterChainGenerator`
 /// is that this one learns vowel and consonant *clusters* and the relative probabilities with which
 /// one cluster follows another.  
-/// 
+///
 /// So, from a string like `"fascinating"` it learns the following transitions:
 ///
 /// - `"f"` or `"n"` -> `"a"`
@@ -73,12 +73,12 @@ use crate::RandomTextGenerator;
 /// }
 /// ```
 ///
-pub struct ClusterChainGenerator<'a> {
+pub struct ClusterChainGenerator {
     pub(super) model: MultiMarkov<String>,
-    pub(super) pattern: Option<&'a str>,
+    pub(super) pattern: Option<Regex>,
 }
 
-impl<'a> ClusterChainGenerator<'a> {
+impl<'a> ClusterChainGenerator {
     pub const DEFAULT_ORDER: i32 = 3;
     pub const DEFAULT_PRIOR: f64 = 0.001;
 
@@ -90,26 +90,24 @@ impl<'a> ClusterChainGenerator<'a> {
         // start with the beginning-of-word character
         let mut name = vec!["#".to_string()];
         name.push(self.model.random_next(&name).unwrap());
-        while !name.ends_with(&*vec!["#".to_string()]) {
+        while !name.ends_with(&["#".to_string()]) {
             // keep adding letters until we reach the end-of-word character
             name.push(self.model.random_next(&name).unwrap());
         }
         // remove the trailing and leading "#" signs
         name.pop();
         name.remove(0);
-        let stringname = name.join("");
-        stringname
+        name.join("")
     }
 }
 
-impl RandomTextGenerator for ClusterChainGenerator<'_> {
+impl RandomTextGenerator for ClusterChainGenerator {
     fn generate_one(&mut self) -> String {
-        match self.pattern {
+        match self.pattern.clone() {
             None => self.generate_string(),
-            Some(pattern) => {
-                let re = Regex::new(pattern).unwrap();
+            Some(re) => {
                 let mut candidate = self.generate_string();
-                while !re.is_match(&*candidate) {
+                while !re.is_match(&candidate) {
                     //println!("got '{}', re-rolling!", candidate);
                     candidate = self.generate_string();
                 }

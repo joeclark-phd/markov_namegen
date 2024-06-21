@@ -1,7 +1,7 @@
-use regex::Regex;
 use crate::characterchain::builder::CharacterChainGeneratorBuilder;
 use crate::interface::RandomTextGenerator;
 use multimarkov::MultiMarkov;
+use regex::Regex;
 
 /// This struct, once trained on a corpus of training data, can be used repeatedly to generate
 /// random text strings (i.e. names) that sort-of resemble the training data.  At its heart is a
@@ -61,12 +61,12 @@ use multimarkov::MultiMarkov;
 /// }
 /// ```
 ///
-pub struct CharacterChainGenerator<'a> {
+pub struct CharacterChainGenerator {
     pub(super) model: MultiMarkov<char>,
-    pub(super) pattern: Option<&'a str>,
+    pub(super) pattern: Option<Regex>,
 }
 
-impl<'a> CharacterChainGenerator<'a> {
+impl<'a> CharacterChainGenerator {
     pub const DEFAULT_ORDER: i32 = 3;
     pub const DEFAULT_PRIOR: f64 = 0.005;
 
@@ -78,26 +78,24 @@ impl<'a> CharacterChainGenerator<'a> {
         // start with the beginning-of-word character
         let mut name = vec!['#'];
         name.push(self.model.random_next(&name).unwrap());
-        while !name.ends_with(&*vec!['#']) {
+        while !name.ends_with(&['#']) {
             // keep adding letters until we reach the end-of-word character
             name.push(self.model.random_next(&name).unwrap());
         }
         // remove the trailing and leading "#" signs
         name.pop();
         name.remove(0);
-        let stringname = name.iter().collect::<String>();
-        stringname
+        name.iter().collect::<String>()
     }
 }
 
-impl RandomTextGenerator for CharacterChainGenerator<'_> {
+impl RandomTextGenerator for CharacterChainGenerator {
     fn generate_one(&mut self) -> String {
-        match self.pattern {
+        match self.pattern.clone() {
             None => self.generate_string(),
-            Some(pattern) => {
-                let re = Regex::new(pattern).unwrap();
+            Some(re) => {
                 let mut candidate = self.generate_string();
-                while !re.is_match(&*candidate) {
+                while !re.is_match(&candidate) {
                     //println!("got '{}', re-rolling!", candidate);
                     candidate = self.generate_string();
                 }

@@ -1,27 +1,26 @@
 mod characterchain;
 mod interface;
 
-use std::fs::File;
-use std::io::{BufReader, BufRead};
-use rand::SeedableRng;
 use rand::rngs::SmallRng;
+use rand::SeedableRng;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 use crate::characterchain::generator::CharacterChainGenerator;
 use crate::interface::RandomTextGenerator;
 
 fn main() {
-
     // Test of CharacterChainGenerator
     println!("Ten Roman names from CharacterChainGenerator:\n");
 
     let file = File::open("resources/romans.txt").unwrap();
     let reader = BufReader::new(file);
-    let lines = reader.lines().map(|l| l.unwrap() );
+    let lines = reader.lines().map(|l| l.unwrap());
 
     let mut namegen = CharacterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.007)
-//        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
+        //.with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
         .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines)
@@ -36,12 +35,12 @@ fn main() {
 
     let file2 = File::open("resources/romans.txt").unwrap();
     let reader2 = BufReader::new(file2);
-    let lines2 = reader2.lines().map(|l| l.unwrap() );
+    let lines2 = reader2.lines().map(|l| l.unwrap());
 
     let mut namegen2 = CharacterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.0005)
-//        .with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
+        //.with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
         .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines2)
@@ -50,8 +49,4 @@ fn main() {
     for _i in 0..10 {
         println!("{}", namegen2.generate_one());
     }
-
-
 }
-
-

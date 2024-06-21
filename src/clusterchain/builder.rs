@@ -1,10 +1,10 @@
-use std::ops::Deref;
+use crate::clusterchain::generator::ClusterChainGenerator;
+use is_vowel::IsRomanceVowel;
 use multimarkov::builder::MultiMarkovBuilder;
 use multimarkov::MultiMarkov;
 use rand::RngCore;
-use crate::clusterchain::generator::ClusterChainGenerator;
-use is_vowel::IsRomanceVowel;
-
+use regex::Regex;
+use std::ops::Deref;
 /// A Builder pattern for ClusterChainGenerator.
 pub struct ClusterChainGeneratorBuilder<'a> {
     model: MultiMarkovBuilder<String>,
@@ -12,7 +12,6 @@ pub struct ClusterChainGeneratorBuilder<'a> {
 }
 
 impl<'a> ClusterChainGeneratorBuilder<'a> {
-
     /// Instantiate a new builder with default values.
     pub fn new() -> Self {
         Self {
@@ -38,7 +37,7 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
     ///
     /// NOTE: Order should be set *before* training the model with `.train()`
     pub fn with_order(mut self, order: i32) -> Self {
-        assert!(order > 0,"Order must be an integer greater than zero.");
+        assert!(order > 0, "Order must be an integer greater than zero.");
         self.model = self.model.with_order(order); // update model now, so it'll affect training
         self
     }
@@ -74,11 +73,16 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
     /// Ingest a training data set to train the model.
     /// The argument 'sequences' is an iterator of either `String` or `&str` values, the words or names
     /// that we want our randomly generated text to resemble.
-    pub fn train(mut self, sequences: impl Iterator<Item=impl Deref<Target = str>>) -> Self {
-        self.model = self.model.train( sequences
-                                           .map(|s| s.to_lowercase()) // lowercase the input
-                                           .map(|s| ClusterChainGeneratorBuilder::clusterize(s))
-                                           .map(|mut s| { s.insert(0, "#".to_string()); s.push("#".to_string()); s }) // add the beginning-of-character and end-of-character strings
+    pub fn train(mut self, sequences: impl Iterator<Item = impl Deref<Target = str>>) -> Self {
+        self.model = self.model.train(
+            sequences
+                .map(|s| s.to_lowercase()) // lowercase the input
+                .map(ClusterChainGeneratorBuilder::clusterize)
+                .map(|mut s| {
+                    s.insert(0, "#".to_string());
+                    s.push("#".to_string());
+                    s
+                }), // add the beginning-of-character and end-of-character strings
         );
         self
     }
@@ -113,21 +117,21 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
     }
 
     /// Build the ClusterChainGenerator (consuming the "Builder" in the process).
-    pub fn build(self) -> ClusterChainGenerator<'a> {
+    pub fn build(self) -> ClusterChainGenerator {
+        let pattern = self.pattern.map(|pat| Regex::new(pat).unwrap());
         ClusterChainGenerator {
             model: self.model.build(),
-            pattern: self.pattern,
+            pattern,
         }
     }
-
 }
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
-    use is_vowel::IsRomanceVowel;
     use crate::clusterchain::builder::ClusterChainGeneratorBuilder;
     use crate::clusterchain::generator::ClusterChainGenerator;
+    use is_vowel::IsRomanceVowel;
+    use std::collections::HashSet;
 
     #[test]
     fn test_is_vowel_crate_works() {
@@ -140,7 +144,7 @@ mod tests {
         assert!(!'b'.is_romance_vowel());
         assert!(!'y'.is_romance_vowel());
         assert!('ĳ'.is_romance_vowel());
-        let extra_vowels : HashSet<char> = "yæœøɏʎ".chars().collect();  // treat 'y' as a vowel, too (and some non-romance vowels)
+        let extra_vowels: HashSet<char> = "yæœøɏʎ".chars().collect(); // treat 'y' as a vowel, too (and some non-romance vowels)
         assert!('y'.is_romance_vowel_including(&extra_vowels));
         assert!('ǣ'.is_romance_vowel_including(&extra_vowels));
         assert!('ǿ'.is_romance_vowel_including(&extra_vowels));
@@ -148,26 +152,40 @@ mod tests {
 
     #[test]
     fn test_clusterize() {
-        assert_eq!(ClusterChainGeneratorBuilder::clusterize(String::from("foobar")),
-                   vec!["f".to_string(),"oo".to_string(),"b".to_string(),"a".to_string(),"r".to_string()]);
+        assert_eq!(
+            ClusterChainGeneratorBuilder::clusterize(String::from("foobar")),
+            vec![
+                "f".to_string(),
+                "oo".to_string(),
+                "b".to_string(),
+                "a".to_string(),
+                "r".to_string()
+            ]
+        );
     }
 
     #[test]
     fn test_builder_pattern_works() {
-        let generator = ClusterChainGenerator::builder().with_order(2).with_prior(0.007).with_pattern("foo").build();
+        let _generator = ClusterChainGenerator::builder()
+            .with_order(2)
+            .with_prior(0.007)
+            .with_pattern("foo")
+            .build();
     }
 
     #[test]
-    #[should_panic(expected="Order must be an integer greater than zero.")]
+    #[should_panic(expected = "Order must be an integer greater than zero.")]
     fn test_order_cannot_be_less_than_one() {
-        let generator = ClusterChainGenerator::builder().with_order(0).build();
+        let _generator = ClusterChainGenerator::builder().with_order(0).build();
     }
 
     #[test]
     fn test_can_train_model_with_vec_of_strings() {
         // Training works equally well with an iterator of Strings or an iterator of &strs.
-        let inputs = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
-        let generator = ClusterChainGenerator::builder().train(inputs).build();
+        let inputs = vec![
+            "dopey", "sneezy", "bashful", "sleepy", "happy", "grumpy", "doc",
+        ]
+        .into_iter();
+        let _generator = ClusterChainGenerator::builder().train(inputs).build();
     }
-
 }
