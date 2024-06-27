@@ -127,6 +127,8 @@ anneth
 
 ## Release Notes
 
+0.3.3: Cleaned up a loop to remove minor code duplication.
+
 0.3.2: Moving the call to `Regex::new` should speed up the call to `generate_one()`. Thanks [ratmice](https://github.com/ratmice).
 
 0.3.1: Added the ability to initialize each type of generator with a custom RNG.
