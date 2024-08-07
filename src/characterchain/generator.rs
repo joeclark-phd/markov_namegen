@@ -61,6 +61,7 @@ use regex::Regex;
 /// }
 /// ```
 ///
+#[derive(Debug)]
 pub struct CharacterChainGenerator {
     pub(super) model: MultiMarkov<char>,
     pub(super) pattern: Option<Regex>,

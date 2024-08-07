@@ -126,6 +126,7 @@ anneth
 ```
 
 ## Release Notes
+0.4.0: Implemented Debug trait.
 
 0.3.3: Cleaned up a loop to remove minor code duplication.
 

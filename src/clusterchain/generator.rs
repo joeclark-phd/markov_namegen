@@ -73,6 +73,7 @@ use regex::Regex;
 /// }
 /// ```
 ///
+#[derive(Debug)]
 pub struct ClusterChainGenerator {
     pub(super) model: MultiMarkov<String>,
     pub(super) pattern: Option<Regex>,
