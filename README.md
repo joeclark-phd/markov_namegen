@@ -126,6 +126,8 @@ anneth
 ```
 
 ## Release Notes
+0.5.0: Added real logging using the `log` crate, notably logging failed pattern matching, which should be helpful for users of the crate to figure out if their pattern is too restrictive.  Fixed a bug in `main.rs` and moved it under "examples"; run it with `cargo run --example main`.
+
 0.4.0: Implemented Debug trait.
 
 0.3.3: Cleaned up a loop to remove minor code duplication.

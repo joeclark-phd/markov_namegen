@@ -1,5 +1,6 @@
 use crate::characterchain::builder::CharacterChainGeneratorBuilder;
 use crate::interface::RandomTextGenerator;
+use log::{debug, trace};
 use multimarkov::MultiMarkov;
 use regex::Regex;
 
@@ -99,9 +100,10 @@ impl RandomTextGenerator for CharacterChainGenerator {
             Some(re) => {
                 let mut candidate = self.generate_string();
                 while !re.is_match(&candidate) {
-                    //println!("got '{}', re-rolling!", candidate);
+                    debug!("CharacterChainGenerator generated '{}' which doesn't match the regex pattern. Re-rolling!", candidate);
                     candidate = self.generate_string();
                 }
+                trace!("CharacterChainGenerator generated '{}'",candidate);
                 candidate
             }
         }

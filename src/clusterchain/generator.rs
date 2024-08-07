@@ -1,5 +1,6 @@
 use crate::clusterchain::builder::ClusterChainGeneratorBuilder;
 use crate::RandomTextGenerator;
+use log::{debug, trace};
 use multimarkov::MultiMarkov;
 use regex::Regex;
 
@@ -111,9 +112,10 @@ impl RandomTextGenerator for ClusterChainGenerator {
             Some(re) => {
                 let mut candidate = self.generate_string();
                 while !re.is_match(&candidate) {
-                    //println!("got '{}', re-rolling!", candidate);
+                    debug!("ClusterChainGenerator generated '{}' which doesn't match the regex pattern. Re-rolling!", candidate);
                     candidate = self.generate_string();
                 }
+                trace!("ClusterChainGenerator generated '{}'",candidate);
                 candidate
             }
         }

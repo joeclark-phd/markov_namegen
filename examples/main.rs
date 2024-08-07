@@ -1,15 +1,14 @@
-mod characterchain;
-mod interface;
-
+use markov_namegen::{CharacterChainGenerator, ClusterChainGenerator, RandomTextGenerator};
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use crate::characterchain::generator::CharacterChainGenerator;
-use crate::interface::RandomTextGenerator;
-
 fn main() {
+
+    // initialize logging
+    env_logger::builder().filter_level(log::LevelFilter::Debug).init();
+
     // Test of CharacterChainGenerator
     println!("Ten Roman names from CharacterChainGenerator:\n");
 
@@ -37,7 +36,7 @@ fn main() {
     let reader2 = BufReader::new(file2);
     let lines2 = reader2.lines().map(|l| l.unwrap());
 
-    let mut namegen2 = CharacterChainGenerator::builder()
+    let mut namegen2 = ClusterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.0005)
         //.with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
