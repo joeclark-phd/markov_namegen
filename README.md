@@ -126,6 +126,9 @@ anneth
 ```
 
 ## Release Notes
+
+0.5.1: Made RNG sendable between threads, and added MIT license file. Thanks [PPakalns](https://github.com/PPakalns).
+
 0.5.0: Added real logging using the `log` crate, notably logging failed pattern matching, which should be helpful for users of the crate to figure out if their pattern is too restrictive.  Fixed a bug in `main.rs` and moved it under "examples"; run it with `cargo run --example main`.
 
 0.4.0: Implemented Debug trait.
