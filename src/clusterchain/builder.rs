@@ -66,7 +66,7 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
         self
     }
     /// Sets a custom Random Number Generator (RNG) for the model.
-    pub fn with_rng(mut self, rng: Box<dyn RngCore>) -> Self {
+    pub fn with_rng(mut self, rng: Box<dyn RngCore + Send + Sync>) -> Self {
         self.model = self.model.with_rng(rng);
         self
     }
