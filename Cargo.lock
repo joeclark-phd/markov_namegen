@@ -181,6 +181,8 @@ checksum = "f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273"
 [[package]]
 name = "multimarkov"
 version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49ee3515dfc9ea9382f711b84fe6b30561d79f6a9d25cd31b52b85429d7edf43"
 dependencies = [
  "log",
  "rand",
