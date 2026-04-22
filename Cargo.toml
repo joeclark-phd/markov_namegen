@@ -15,7 +15,7 @@ Random text generators based on Markov models.
 multimarkov = "1.0.1"
 regex = "1.12.2"
 is-vowel = "0.1.0"
-rand = { version = "0.9.2", features = ["small_rng"] }
+rand = { version = "0.9.3", features = ["small_rng"] }
 log = "0.4.29"
 
 [dev-dependencies]
