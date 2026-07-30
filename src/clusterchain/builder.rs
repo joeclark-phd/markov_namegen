@@ -2,7 +2,6 @@ use crate::clusterchain::generator::ClusterChainGenerator;
 use is_vowel::IsRomanceVowel;
 use multimarkov::builder::MultiMarkovBuilder;
 use multimarkov::MultiMarkov;
-use rand::RngCore;
 use regex::Regex;
 use std::ops::Deref;
 /// A Builder pattern for ClusterChainGenerator.
@@ -63,11 +62,6 @@ impl<'a> ClusterChainGeneratorBuilder<'a> {
     /// Set the priors to None.
     pub fn without_prior(mut self) -> Self {
         self.model = self.model.without_prior();
-        self
-    }
-    /// Sets a custom Random Number Generator (RNG) for the model.
-    pub fn with_rng(mut self, rng: Box<dyn RngCore + Send + Sync>) -> Self {
-        self.model = self.model.with_rng(rng);
         self
     }
     /// Ingest a training data set to train the model.

@@ -16,17 +16,17 @@ fn main() {
     let reader = BufReader::new(file);
     let lines = reader.lines().map(|l| l.unwrap());
 
-    let mut namegen = CharacterChainGenerator::builder()
+    let namegen = CharacterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.007)
         //.with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
-        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines)
         .build();
+    let mut rng = SmallRng::seed_from_u64(123);
 
     for _i in 0..10 {
-        println!("{}", namegen.generate_one());
+        println!("{}", namegen.generate_one(&mut rng));
     }
 
     // Test of ClusterChainGenerator
@@ -36,16 +36,16 @@ fn main() {
     let reader2 = BufReader::new(file2);
     let lines2 = reader2.lines().map(|l| l.unwrap());
 
-    let mut namegen2 = ClusterChainGenerator::builder()
+    let namegen2 = ClusterChainGenerator::builder()
         .with_order(3)
         .with_prior(0.0005)
         //.with_pattern("^[a-z]*a$") // names ending with "a" (feminine names)
         .with_pattern("^[A-Za-z]{4,8}$") // names 4-8 characters long
-        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines2)
         .build();
+    let mut rng2 = SmallRng::seed_from_u64(123);
 
     for _i in 0..10 {
-        println!("{}", namegen2.generate_one());
+        println!("{}", namegen2.generate_one(&mut rng2));
     }
 }

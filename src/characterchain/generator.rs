@@ -2,6 +2,7 @@ use crate::characterchain::builder::CharacterChainGeneratorBuilder;
 use crate::interface::RandomTextGenerator;
 use log::{debug, trace};
 use multimarkov::MultiMarkov;
+use rand::Rng;
 use regex::Regex;
 
 /// This struct, once trained on a corpus of training data, can be used repeatedly to generate
@@ -23,15 +24,17 @@ use regex::Regex;
 ///
 /// ```
 /// use markov_namegen::CharacterChainGenerator;
-/// use rand::{rngs::SmallRng, SeedableRng};
+/// use markov_namegen::RandomTextGenerator;
+/// use rand::{rngs::SmallRng, Rng, SeedableRng};
 /// let pokedex_names = vec!["bulbasaur","charmander","squirtle","pikachu"].into_iter();
 /// let namegen = CharacterChainGenerator::builder()
 ///     .with_order(2)
 ///     .with_prior(0.007)
 ///     .with_pattern("^[A-Za-z]{4,8}$")
-///     .with_rng(Box::new(SmallRng::seed_from_u64(123)))
 ///     .train(pokedex_names)
 ///     .build();
+/// let mut rng = SmallRng::seed_from_u64(123);
+/// let _ = namegen.generate_one(&mut rng);
 /// ```
 ///
 /// You can set a pattern to filter acceptable names; for example above we are requiring that
@@ -53,12 +56,15 @@ use regex::Regex;
 /// let reader = BufReader::new(file);
 /// let lines = reader.lines().map(|l| l.unwrap() );
 ///
-/// let mut namegen = CharacterChainGenerator::builder()
+/// use rand::{rngs::SmallRng, SeedableRng};
+///
+/// let namegen = CharacterChainGenerator::builder()
 ///     .train(lines)
 ///     .build();
+/// let mut rng = SmallRng::seed_from_u64(123);
 ///
 /// for _i in 0..10 {
-///     println!("{}", namegen.generate_one());
+///     println!("{}", namegen.generate_one(&mut rng));
 /// }
 /// ```
 ///
@@ -76,12 +82,12 @@ impl<'a> CharacterChainGenerator {
         CharacterChainGeneratorBuilder::new()
     }
 
-    fn generate_string(&mut self) -> String {
+    fn generate_string<R: Rng + ?Sized>(&self, rng: &mut R) -> String {
         // start with the beginning-of-word character
         let mut name = vec!['#'];
         loop {
             // keep adding letters until we reach the end-of-word character
-            name.push(self.model.random_next(&name).unwrap());
+            name.push(self.model.random_next(rng, &name).unwrap());
             if name.ends_with(&['#']) {
                 break
             }
@@ -94,14 +100,14 @@ impl<'a> CharacterChainGenerator {
 }
 
 impl RandomTextGenerator for CharacterChainGenerator {
-    fn generate_one(&mut self) -> String {
+    fn generate_one<R: Rng + ?Sized>(&self, rng: &mut R) -> String {
         match self.pattern.clone() {
-            None => self.generate_string(),
+            None => self.generate_string(rng),
             Some(re) => {
-                let mut candidate = self.generate_string();
+                let mut candidate = self.generate_string(rng);
                 while !re.is_match(&candidate) {
                     debug!("CharacterChainGenerator generated '{}' which doesn't match the regex pattern. Re-rolling!", candidate);
-                    candidate = self.generate_string();
+                    candidate = self.generate_string(rng);
                 }
                 trace!("CharacterChainGenerator generated '{}'",candidate);
                 candidate

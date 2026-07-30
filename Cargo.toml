@@ -1,6 +1,6 @@
 [package]
 name = "markov_namegen"
-version = "0.5.2"
+version = "0.6.0"
 edition = "2021"
 authors = ["joeclark-phd <joe@joeclark.net>"]
 license = "MIT"
@@ -12,11 +12,11 @@ Random text generators based on Markov models.
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-multimarkov = "1.0.1"
-regex = "1.12.2"
-is-vowel = "0.1.0"
-rand = { version = "0.9.2", features = ["small_rng"] }
-log = "0.4.29"
+multimarkov = { version = "1.1.0" }
+regex = { version = "1.8.1", default-features = false, features = ["std"] }
+is-vowel = { version = "0.1.0", default-features = false }
+rand = { version = "0.10", default-features = false }
+log = { version = "0.4.22", default-features = false }
 
 [dev-dependencies]
-env_logger = "0.11.8"
+env_logger = { version = "0.11.5", default-features = false }

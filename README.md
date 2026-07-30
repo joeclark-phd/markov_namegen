@@ -21,7 +21,7 @@ To use, add `markov_namegen` to your `Cargo.toml`.
 
 One trait, RandomTextGenerator, is provided, with one method:
 
-- `generate_one() -> String` yields a new, procedurally-generated text string.
+- `generate_one(&mut rng) -> String` yields a new, procedurally-generated text string.
 
 There are three structs that implement the trait:
 
@@ -34,14 +34,16 @@ There are three structs that implement the trait:
 Quick start:
 
     use markov_namegen::CharacterChainGenerator;
+    use rand::{rngs::SmallRng, SeedableRng};
 
     let dwarf_names = vec!["dopey","sneezy","bashful","sleepy","happy","grumpy","doc"].into_iter();
 
     let generator = CharacterChainGenerator::builder()
         .train(dwarf_names)
         .build();
+    let mut rng = SmallRng::seed_from_u64(123);
 
-    println!(generator.generate_one());
+    println!("{}", generator.generate_one(&mut rng));
 
 (or using a file as input, and demonstrating all the builder options...)
 
@@ -59,11 +61,11 @@ Quick start:
         .with_order(2)
         .with_prior(0.007)
         .with_pattern("^[A-Za-z]{4,8}$")
-        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(lines)
         .build();
+    let mut rng = SmallRng::seed_from_u64(123);
 
-    println!(generator.generate_one());
+    println!("{}", namegen.generate_one(&mut rng));
 
 The big idea of Markov-chain random text generation is that you collect statistics on which characters follow other characters.  So if a particular language uses "th" a lot, "t" should often be followed by "h" in the randomly-generated text.  This crate's approach takes in an iterator of training data and uses it to build up a Markov model, which can be used to generate new strings. However, the Markov-chain approach has a number of caveats:
 
@@ -98,10 +100,10 @@ Quick start:
         .with_order(2)
         .without_prior()
         .with_pattern("^[A-Za-z]{4,8}$")
-        .with_rng(Box::new(SmallRng::seed_from_u64(123)))
         .train(dwarf_names)
         .build();
-    println!(generator.generate_one());
+    let mut rng = SmallRng::seed_from_u64(123);
+    println!("{}", namegen.generate_one(&mut rng));
 
 
 A class that uses a vowel/consonant clustering algorithm to generate new random text.  Based loosely on [an algorithm described by Kusigrosz at RogueBasin](http://www.roguebasin.com/index.php/Cluster_chaining_name_generator), it scans input text for clusters of vowels and clusters of consonants, after converting it all to lowercase, keeping track of all clusters that have been observed to follow any given cluster.  For example, "Elizabeth" would yield clusters `#-e-l-i-z-a-b-e-th-#` and "Anne" would yield `#-a-nn-e-#` where "`#`" is a control character marking the start or end of a string.
@@ -126,6 +128,11 @@ anneth
 ```
 
 ## Release Notes
+
+0.6.0:
+* Generators are stateless (no longer store an rng generator). Instead callers need to pass Rng generator.
+* Dependencies now use `default-features = false` for a smaller feature set.
+* Upgraded `rand` and `multimarkov` dependencies.
 
 0.5.1: Made RNG sendable between threads, and added MIT license file. Thanks [PPakalns](https://github.com/PPakalns).
 
