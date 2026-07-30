@@ -129,7 +129,7 @@ anneth
 
 ## Release Notes
 
-0.6.0:
+0.7.0:
 * Generators are stateless (no longer store an rng generator). Instead callers need to pass Rng generator.
 * Dependencies now use `default-features = false` for a smaller feature set.
 * Upgraded `rand` and `multimarkov` dependencies.
